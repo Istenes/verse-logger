@@ -1,47 +1,39 @@
 using { /Verse.org/Colors }
 
-LogLevels:= enum {
+log_levels := enum {
     Info
     Warning
     Error
     Debug
 }
 
-logger<public> := class():
-    log<private>(Msg:string, ?Level:LogLevels = LogLevels.Info, ?Duration:float := 2.0, ?Color:color := NamedColors.White)<transacts>:void=
-        Print("{LevelToString(Level)} {Msg}",  ?Duration := Duration, ?Color := Color)
-    
-    info<public>(Msg:string)<transacts>:void=
-        Self.log(Msg, ?Level := LogLevels.Info, ?Duration := 2.0, ?Color := LevelToColor(LogLevels.Info))
+logger<internal> := class:
 
-    warning<public>(Msg:string)<transacts>:void=
-        Self.log(Msg, ?Level := LogLevels.Warning, ?Duration := 10.0, ?Color := LevelToColor(LogLevels.Warning))
+    Log<private>(Message:string, ?Level:log_levels = log_levels.Info, ?Duration:float = 2.0, ?Color:color = NamedColors.White)<transacts>:void =
+        Print("{LevelToString(Level)} {Message}", ?Duration := Duration, ?Color := Color)
     
-    error<public>(Msg:string)<transacts>:void=
-        Self.log(Msg, ?Level := LogLevels.Error, ?Duration := 20.0, ?Color := LevelToColor(LogLevels.Error))
-       
-    debug<public>(Msg:string)<transacts>:void=
-        Self.log(Msg, ?Level := LogLevels.Debug, ?Duration := 2.0, ?Color := LevelToColor(LogLevels.Debug))
-            
-    LevelToString<private>(Level:LogLevels)<transacts>:string=
-        case (Level):
-            LogLevels.Info =>
-                return "INFO: "
-            LogLevels.Warning =>
-                return "WARNING: "
-            LogLevels.Error =>
-                return "ERROR: "
-            LogLevels.Debug =>
-                return "DEBUG:"
+    Info<public>(Message:string)<transacts>:void =
+        Log(Message, ?Level := log_levels.Info, ?Duration := 2.0, ?Color := LevelToColor(log_levels.Info))
+
+    Warning<public>(Message:string)<transacts>:void =
+        Log(Message, ?Level := log_levels.Warning, ?Duration := 10.0, ?Color := LevelToColor(log_levels.Warning))
+    
+    Error<public>(Message:string)<transacts>:void =
+        Log(Message, ?Level := log_levels.Error, ?Duration := 20.0, ?Color := LevelToColor(log_levels.Error))
         
-    LevelToColor<private>(Level:LogLevels)<transacts>:color=
-        case (Level):
-            LogLevels.Debug =>
-                return  NamedColors.LightBlue
-            LogLevels.Info =>
-                return NamedColors.White
-            LogLevels.Warning =>
-                return  NamedColors.Gold
-            LogLevels.Error =>
-                return  NamedColors.OrangeRed
+    Debug<public>(Message:string)<transacts>:void =
+        Log(Message, ?Level := log_levels.Debug, ?Duration := 2.0, ?Color := LevelToColor(log_levels.Debug))
             
+    LevelToString<private>(Level:log_levels)<transacts>:string =
+        case (Level):
+            log_levels.Info => "INFO: "
+            log_levels.Warning => "WARNING: "
+            log_levels.Error => "ERROR: "
+            log_levels.Debug => "DEBUG:"
+        
+    LevelToColor<private>(Level:log_levels)<transacts>:color =
+        case (Level):
+            log_levels.Debug => NamedColors.LightBlue
+            log_levels.Info => NamedColors.White
+            log_levels.Warning => NamedColors.Gold
+            log_levels.Error => NamedColors.OrangeRed
